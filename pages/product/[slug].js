@@ -38,28 +38,36 @@ export const getStaticPaths = async () => {
 
 const ProductDetails = ({ products, highlight }) => {
   const { image, name, slug, price, details } = highlight;
-  const {decQty,incQty, qty} = useStateContext();
+  const {decQty,incQty, qty,onAdd,} = useStateContext();
+  
   return (
     <div className="min-h-screen bg-base-200 flex flex-col">
       <div className="flex items-center justify-center">
         <div className="hero-content">
-          <div className="flex">
+          <div className="flex flex-col min-w-min">
             <img
               src={urlFor(image && image[0])}
-              class="justify-center items-center"
+              class="justify-center items-center "
+              height={250}
+              width = {250}
             />
+            <div className=" py-2 bg-stone-400  rounded-md  px-2">
+              <pre>
+                <code className="">{details}</code>
+              </pre>
+            </div>
           </div>
           <div>
             <h2 className="text-5xl py-2">{name}</h2>
-            <div className=" py-2 bg-stone-400  rounded-md  px-2">
-              <pre>
-                <code>{details}</code>
-              </pre>
-            </div>
+            
             <div className="btn-group py-2">
             <button className="btn py-2  px-2 " onClick={decQty}>-</button>
-            <p className=" btn btn-disabled px-2">{qty}</p>
+            <p className=" btn btn-disabled px-2 text-black">{qty}</p>
             <button className="btn px-2"  onClick={incQty}>+</button>
+          </div>
+          <div className="">
+             <button className="btn" onClick={()=>onAdd(highlight,qty)}>Add to cart</button>
+          <button className="btn mx-2">Buy Now</button>
           </div>
           </div>
         </div>
