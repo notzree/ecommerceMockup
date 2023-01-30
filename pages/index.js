@@ -4,6 +4,7 @@ import { Inter } from '@next/font/google'
 import { client } from '../sanitylib/client';
 import ProductLibrary from '../components/productLibrary';
 import HeroBanner from '../components/heroBanner';
+import { loadStripe } from '@stripe/stripe-js';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -20,7 +21,6 @@ export async function getServerSideProps(){
  }
 }
 export default function Home({products , banner}) {
-  console.log(products);
   return (
     <>
       <Head>
@@ -41,7 +41,8 @@ export default function Home({products , banner}) {
         </div>
         <div className="flex  justify-center items-center">
         {
-                products?.map((product)=>(
+          
+                products?.map((product)=> (
                 <div>
               <ProductLibrary products={product} key ={product._id}/>
                 </div>

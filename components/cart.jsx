@@ -6,10 +6,12 @@ import {
   AiOutlineShopping,
 } from "react-icons/ai";
 import { TiDeleteOutline } from "react-icons/ti";
-import toast from "react-hot-toast";
+
 import { useStateContext } from "../context/StateContext";
 import { urlFor } from "../sanitylib/client";
 import { useRef } from "react";
+import getStripe from "../sanitylib/loadStripeCheckout";
+import { toast } from "react-hot-toast";
 export default function Cart() {
   const cartRef = useRef();
   const {
@@ -23,6 +25,27 @@ export default function Cart() {
     deleteProduct,
     toggleCartItemQuantity,
   } = useStateContext();
+
+  const handleCheckout = async ()=>{
+    const stripe = await getStripe();
+    const response = await fetch('/api/stripe', {
+     method: 'POST',
+     headers: {
+        'Content-Type': 'application/json',
+     },
+     body: JSON.stringify(cartItems),
+
+
+    });
+    if (response.statuscode === 500) return;
+
+    const data = await response.json();
+    toast.loading('Redirecting...');
+    stripe.redirectToCheckout({sessionId: data.id});
+
+  }
+
+
 
   return (
     <div
@@ -54,8 +77,8 @@ export default function Cart() {
           {cartItems.length >= 1 &&
             cartItems.map((item) => {
               return (
-                <div className="flex  my-2">
-                  <div className="w-40 m-4 " key={item?._id}>
+                <div className="flex  my-2" key={item?._id}>
+                  <div className="w-40 m-4">
                     <img
                       src={urlFor(item?.image[0])}
                       className="mask mask-squircle"
@@ -86,7 +109,7 @@ export default function Cart() {
                     <div className="ml-10 items-end ">
                       <button
                         className="btn btn-sm"
-                        onClick={(item) => deleteProduct(item)}
+                        onClick={() => deleteProduct(item)}
                       >
                         <TiDeleteOutline />
                       </button>
@@ -103,7 +126,7 @@ export default function Cart() {
               <h3>${totalPrice}</h3>
             </div>
             <div className="flex items-center justify-center">
-              <button className="btn btn-info">Checkout with Stripe</button>
+              <button className="btn btn-info" onClick={handleCheckout}>Checkout with Stripe</button>
             </div>
           </div>
         )}

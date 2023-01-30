@@ -4,6 +4,7 @@ import Image from "next/image";
 export default function ProductLibrary({
   products: { image, name, slug, price },
 }) {
+  
   return (
     <div className=" card px-2 py-2">
       <Link href={`/product/${slug.current}`}>

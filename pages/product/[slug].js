@@ -47,7 +47,7 @@ const ProductDetails = ({ products, highlight }) => {
           <div className="flex flex-col min-w-min">
             <img
               src={urlFor(image && image[0])}
-              class="justify-center items-center "
+              className="justify-center items-center "
               height={250}
               width = {250}
             />
